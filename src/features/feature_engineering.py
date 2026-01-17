@@ -3,20 +3,9 @@ import numpy as np
 from datetime import timedelta
 from src.logger import logging
 import os
+from src.utils import load_data, load_params
+from sklearn.model_selection import train_test_split
 
-
-def load_data(file_path: str) -> pd.DataFrame:
-    """Load data from a CSV file."""
-    try:
-        df = pd.read_csv(file_path)
-        logging.info('Data loaded from %s', file_path)
-        return df
-    except pd.errors.ParserError as e:
-        logging.error('Failed to parse the CSV file: %s', e)
-        raise
-    except Exception as e:
-        logging.error('Unexpected error occurred while loading the data: %s', e)
-        raise
 
 
 def build_features(df: pd.DataFrame) -> pd.DataFrame:
@@ -91,7 +80,7 @@ def build_features(df: pd.DataFrame) -> pd.DataFrame:
             customer_data.columns
         )
 
-        return customer_data.reset_index()
+        return customer_data
 
     except Exception as e:
         logging.error("Feature engineering failed: %s", e)
@@ -111,14 +100,18 @@ def main():
     try:
 
 
-        train_data = load_data('./data/interim/train_data.csv')
-        test_data = load_data('./data/interim/test_data.csv')
+        data = load_data('./data/interim/data.csv')
 
-        train_df  = build_features(train_data)
-        test_df  = build_features(test_data)
+        df_engineered  = build_features(data)
+
+        params = load_params('params.yaml')
+        test_size = params['feature_engineering']['test_size']
+
+        train_df, test_df = train_test_split(df_engineered, test_size=test_size, random_state=42)
 
         save_data(train_df, os.path.join("./data", "processed", "train_data.csv"))
         save_data(test_df, os.path.join("./data", "processed", "test_data.csv"))
+        logging.info("Engineered features with train and test data saved successfully")
     except Exception as e:
         logging.error('Failed to complete the feature engineering process: %s', e)
         print(f"Error: {e}")

@@ -10,8 +10,6 @@ import warnings
 warnings.simplefilter("ignore", UserWarning)
 warnings.filterwarnings("ignore")
 
-# os.environ["MLFLOW_TRACKING_USERNAME"] = 'shashi-hue'
-# os.environ["MLFLOW_TRACKING_PASSWORD"] = '78e6431c64e560d8dfa4952bd9c0d716c59d0825'
 dagshub.init(repo_owner='shashi-hue', repo_name='Mlops-Forward-Customer-Value', mlflow=True)
 
 

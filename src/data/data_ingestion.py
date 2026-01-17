@@ -1,43 +1,9 @@
-import numpy as np
 import pandas as pd
 import os
-import yaml
 import logging
 from src.logger import logging
+from src.utils import load_params, load_data
 
-
-#Load params from params.yaml
-def load_params(params_path: str) -> dict:
-
-    try:
-        with open(params_path, "r") as file:
-            params = yaml.safe_load(file)
-        logging.debug("Loaded params from: %s", params_path)
-        return params
-    except FileNotFoundError:
-        logging.error("File not found %s", params_path)
-        raise
-    except yaml.YAMLError as e:
-        logging.error("Yaml error: %s", e)
-        raise
-    except Exception as e:
-        logging.error("Unknown error occured while loading params: %s", e)
-        raise
-
-
-#load data
-def load_data(data_uri: str) -> pd.DataFrame:
-    '''Load data from the data path'''
-    try:
-        df = pd.read_csv(data_uri)
-        logging.info("data loaded from the uri: %s", data_uri)
-        return df
-    except pd.errors.ParserError as e:
-        logging.error("Error while parsing data: %s",e)
-        raise
-    except Exception as e:
-        logging.error("Unknow error occured while loading data: %s", data_uri)
-        raise
 
 def save_data(df: pd.DataFrame, data_path: str) -> None:
     '''Save the data'''

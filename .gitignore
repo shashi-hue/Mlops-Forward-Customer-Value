@@ -207,3 +207,9 @@ marimo/_lsp/
 __marimo__/
 
 s3_local/
+
+data/
+
+models/
+
+reports/metrics.json

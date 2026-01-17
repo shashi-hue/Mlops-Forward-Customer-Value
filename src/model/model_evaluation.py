@@ -6,18 +6,9 @@ import mlflow.sklearn
 import dagshub
 from src.logger import logging
 from src.utils import load_model, load_data, evaluate_regression, inverse_rmse, spearman_rank
-import mlflow.pyfunc
 
 dagshub.init(repo_owner='shashi-hue', repo_name='Mlops-Forward-Customer-Value', mlflow=True)
 
-
-#Wraper function because we are trying to log model that is loaded from pkl and not after trained.
-class SklearnWrapper(mlflow.pyfunc.PythonModel):
-    def __init__(self, model):
-        self.model = model
-
-    def predict(self, context, model_input):
-        return self.model.predict(model_input)
 
 
 def save_metrics(metrics: dict, file_path: str) -> None:
@@ -30,16 +21,16 @@ def save_metrics(metrics: dict, file_path: str) -> None:
         logging.error('Error occurred while saving the metrics: %s', e)
         raise
 
-def save_model_info(run_id: str, model_path: str, file_path: str) -> None:
-    """Save the model run ID and path to a JSON file."""
-    try:
-        model_info = {'run_id': run_id, 'model_path': model_path}
-        with open(file_path, 'w') as file:
-            json.dump(model_info, file, indent=4)
-        logging.debug('Model info saved to %s', file_path)
-    except Exception as e:
-        logging.error('Error occurred while saving the model info: %s', e)
-        raise
+# def save_model_info(run_id: str, model_path: str, file_path: str) -> None:
+#     """Save the model run ID and path to a JSON file."""
+#     try:
+#         model_info = {'run_id': run_id, 'model_path': model_path}
+#         with open(file_path, 'w') as file:
+#             json.dump(model_info, file, indent=4)
+#         logging.debug('Model info saved to %s', file_path)
+#     except Exception as e:
+#         logging.error('Error occurred while saving the model info: %s', e)
+#         raise
 
 def main():
     mlflow.set_experiment("pipeline")
@@ -73,7 +64,7 @@ def main():
             )
 
 
-            save_model_info(run.info.run_id, "model", 'reports/experiment_info.json')
+            # save_model_info(run.info.run_id, "model", 'reports/experiment_info.json')
 
             mlflow.log_artifact('reports/metrics.json')
         except Exception as e:
