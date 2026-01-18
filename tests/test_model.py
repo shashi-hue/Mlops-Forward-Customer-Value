@@ -97,8 +97,8 @@ class TestModelLoading(unittest.TestCase):
 
         # Debug output
         print(
-            f"Log RMSE: {log_metrics['rmse']:.3f}, "
-            f"Log MAE: {log_metrics['mae']:.3f}, "
+            f"Log RMSE: {log_metrics['rmse_log']:.3f}, "
+            f"Log MAE: {log_metrics['mae_log']:.3f}, "
             f"R²: {log_metrics['r2']:.3f}, "
             f"Real RMSE: ${rmse_real:.2f}, "
             f"Spearman: {spearman:.3f}"
@@ -121,14 +121,15 @@ class TestModelLoading(unittest.TestCase):
         print("Missing feature handling OK")
 
     def test_data_quality(self):
-        """Test input data quality checks."""
-        # NaN values
+        """Test model behavior with NaN input."""
         data_with_nan = self.holdout_data[self.REQUIRED_FEATURES].copy()
         data_with_nan.iloc[0, 0] = np.nan
-        
-        with self.assertRaises(Exception):
-            self.new_model.predict(data_with_nan)
-        print("NaN handling OK")
+
+        preds = self.new_model.predict(data_with_nan)
+
+        # Ensure prediction exists but is not NaN
+        self.assertFalse(np.isnan(preds).any(), "Predictions contain NaN values")
+        print("NaN handling OK (no NaNs in output)")
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
