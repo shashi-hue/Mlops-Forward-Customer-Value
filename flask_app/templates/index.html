@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Lifetime Value Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fa;
+            padding: 40px;
+        }
+        .container {
+            max-width: 600px;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-top: 12px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 4px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 12px;
+            width: 100%;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #1e40af;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #ecfeff;
+            border-left: 5px solid #06b6d4;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Customer Lifetime Value Prediction</h2>
+
+    <form method="post" action="/predict-form">
+        <label>Unique Invoices</label>
+        <input type="number" step="1" name="unique_invoices" required>
+
+        <label>Total Quantity</label>
+        <input type="number" step="1" name="total_quantity" required>
+
+        <label>Average Quantity per Order</label>
+        <input type="number" step="any" name="avg_quantity_per_order" required>
+
+        <label>Unit Price Std</label>
+        <input type="number" step="any" name="unit_price_std" required>
+
+        <label>Customer Age (days)</label>
+        <input type="number" step="1" name="customer_age_days" required>
+
+        <label>Days Since Last Purchase</label>
+        <input type="number" step="1" name="days_since_last_purchase" required>
+
+        <label>Average Days Between Purchase</label>
+        <input type="number" step="any" name="average_days_between_purchase" required>
+
+        <label>Is One-Time Buyer (0 or 1)</label>
+        <input type="number" min="0" max="1" name="is_onetime_buyer" required>
+
+        <button type="submit">Predict CLV</button>
+    </form>
+
+    {% if prediction %}
+    <div class="result">
+        <strong>Predicted CLV:</strong> {{ prediction }}
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>

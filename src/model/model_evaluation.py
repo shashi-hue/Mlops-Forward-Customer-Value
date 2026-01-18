@@ -7,7 +7,24 @@ import dagshub
 from src.logger import logging
 from src.utils import load_model, load_data, evaluate_regression, inverse_rmse, spearman_rank
 
-dagshub.init(repo_owner='shashi-hue', repo_name='Mlops-Forward-Customer-Value', mlflow=True)
+
+#For local use 
+# dagshub.init(repo_owner='shashi-hue', repo_name='Mlops-Forward-Customer-Value', mlflow=True)
+
+#For production use
+dagshub_token = os.getenv("CAPSTONE_TEST")
+if not dagshub_token:
+    raise EnvironmentError("CAPSTONE_TEST env variable not set")
+
+os.environ["MLFLOW_TRACKING_USERNAME"] = dagshub_token
+os.environ["MLFLOW_TRACKING_PASSWORD"] = dagshub_token
+
+dagshub_url = "https://dagshub.com"
+repo_owner = "shashi-hue"
+repo_name = "Mlops-Forward-Customer-Value"
+
+# Set up MLflow tracking URI
+mlflow.set_tracking_uri(f'{dagshub_url}/{repo_owner}/{repo_name}.mlflow')
 
 
 
