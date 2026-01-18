@@ -87,7 +87,9 @@ class FlaskAppTests(unittest.TestCase):
 
         response = self.client.post("/predict-form", data=form_data)
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b"prediction", response.data)
+
+        self.assertIn(b"Predicted", response.data)
+
 
     def test_metrics_endpoint(self):
         response = self.client.get("/metrics")
