@@ -9,8 +9,8 @@ RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 EXPOSE 5000
 
 # local use
-CMD ["python", "app.py"]
+# CMD ["python", "app.py"]
 
 
 #production
-# CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--timeout", "120", "app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--timeout", "120", "app:app"]
