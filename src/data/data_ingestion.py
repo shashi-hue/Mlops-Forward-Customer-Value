@@ -3,6 +3,10 @@ import os
 import logging
 from src.logger import logging
 from src.utils import load_params, load_data
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parents[2]  # repo root
+DATA_PATH = BASE_DIR / "notebooks" / "retail-data.csv"
 
 
 def save_data(df: pd.DataFrame, data_path: str) -> None:
@@ -20,7 +24,7 @@ def main():
     try:
         # params = load_params('params.yaml')
 
-        df = load_data(r".\notebooks\retail-data.csv")
+        df = load_data(DATA_PATH)
 
 
         save_data(df,'./data')
