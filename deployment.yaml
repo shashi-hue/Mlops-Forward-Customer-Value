@@ -16,9 +16,12 @@ spec:
       - name: flask-app
         image: 930936104956.dkr.ecr.us-east-1.amazonaws.com/capstone-proj:latest
         resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
           limits:
-            memory: "128Mi"
-            cpu: "500m"
+            memory: "512Mi"
+            cpu: "1"
         ports:
         - containerPort: 5000
         env:
@@ -36,6 +39,7 @@ kind: Service
 metadata:
   name: flask-app-service
 spec:
+  type: LoadBalancer
   selector:
     app: flask-app
   ports:
