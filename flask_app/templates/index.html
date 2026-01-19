@@ -2,94 +2,203 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Customer Lifetime Value Prediction</title>
+    <title>90-Day Forward Spending Prediction</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f7fa;
-            padding: 40px;
+        :root{
+            --bg:#f5f7fa;
+            --card:#ffffff;
+            --primary:#2563eb;
+            --primary-dark:#1e40af;
+            --muted:#6b7280;
+            --accent:#06b6d4;
         }
-        .container {
-            max-width: 600px;
-            background: white;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        html,body{
+            height:100%;
+            margin:0;
+            font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+            background: linear-gradient(180deg, var(--bg), #eef2f7 60%);
         }
-        h2 {
-            margin-bottom: 20px;
+        /* center the card */
+        .wrap{
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:32px;
+            box-sizing:border-box;
         }
-        label {
-            display: block;
-            margin-top: 12px;
-            font-weight: bold;
+        .card{
+            width:100%;
+            max-width:760px;
+            background:var(--card);
+            border-radius:12px;
+            box-shadow:0 10px 30px rgba(16,24,40,0.08);
+            padding:28px;
+            box-sizing:border-box;
         }
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-top: 4px;
+        .header{
+            display:flex;
+            align-items:flex-start;
+            justify-content:space-between;
+            gap:20px;
+            margin-bottom:18px;
         }
-        button {
-            margin-top: 20px;
-            padding: 12px;
-            width: 100%;
-            background: #2563eb;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
+        .title {
+            margin:0;
+            font-size:20px;
+            color:#0f172a;
         }
-        button:hover {
-            background: #1e40af;
+        .subtitle{
+            margin:6px 0 0 0;
+            color:var(--muted);
+            font-size:13px;
         }
-        .result {
-            margin-top: 20px;
-            padding: 15px;
-            background: #ecfeff;
-            border-left: 5px solid #06b6d4;
+        .grid{
+            display:grid;
+            grid-template-columns:repeat(2,1fr);
+            gap:12px 16px;
+            margin-top:14px;
+        }
+        label{
+            display:block;
+            font-size:13px;
+            color:#111827;
+            margin-bottom:6px;
+            font-weight:600;
+        }
+        .field{
+            display:flex;
+            flex-direction:column;
+        }
+        input, select {
+            padding:10px 12px;
+            border-radius:8px;
+            border:1px solid #e6e9ef;
+            background:#fff;
+            outline:none;
+            font-size:14px;
+            color:#0f172a;
+            transition:box-shadow .12s, border-color .12s;
+        }
+        input:focus, select:focus{
+            box-shadow:0 6px 18px rgba(37,99,235,0.12);
+            border-color:var(--primary);
+        }
+        .full{
+            grid-column:1 / -1;
+        }
+        .actions{
+            margin-top:18px;
+            display:flex;
+            gap:12px;
+            align-items:center;
+        }
+        button{
+            background:var(--primary);
+            color:#fff;
+            border:none;
+            padding:12px 16px;
+            border-radius:8px;
+            cursor:pointer;
+            font-weight:700;
+            font-size:15px;
+            transition:background .12s, transform .06s;
+        }
+        button:hover{ background:var(--primary-dark); transform:translateY(-1px); }
+        .result{
+            margin-top:18px;
+            padding:14px;
+            border-radius:8px;
+            background:linear-gradient(90deg,#ecfeff,#f0f9ff);
+            border-left:4px solid var(--accent);
+            color:#065f6b;
+            font-weight:700;
+        }
+        .note{
+            font-size:13px;
+            color:var(--muted);
+            margin-top:8px;
+        }
+
+        /* Responsive */
+        @media (max-width:680px){
+            .grid{ grid-template-columns: 1fr; }
+            .header{ flex-direction:column; align-items:flex-start; }
         }
     </style>
 </head>
 <body>
+<div class="wrap">
+    <div class="card">
+        <div class="header">
+            <div>
+                <h1 class="title">90-Day Forward Spending Prediction</h1>
+                <p class="subtitle">Estimate of how much this customer is likely to spend over the next 90 days.</p>
+            </div>
+        </div>
 
-<div class="container">
-    <h2>Customer Lifetime Value Prediction</h2>
+        <form method="post" action="/predict-form" autocomplete="off">
+            <div class="grid">
+                <div class="field">
+                    <label for="unique_invoices">Unique Invoices</label>
+                    <input id="unique_invoices" type="number" step="1" name="unique_invoices" required placeholder="e.g., 5">
+                </div>
 
-    <form method="post" action="/predict-form">
-        <label>Unique Invoices</label>
-        <input type="number" step="1" name="unique_invoices" required>
+                <div class="field">
+                    <label for="total_quantity">Total Quantity</label>
+                    <input id="total_quantity" type="number" step="1" name="total_quantity" required placeholder="e.g., 12">
+                </div>
 
-        <label>Total Quantity</label>
-        <input type="number" step="1" name="total_quantity" required>
+                <div class="field">
+                    <label for="avg_quantity_per_order">Average Quantity per Order</label>
+                    <input id="avg_quantity_per_order" type="number" step="any" name="avg_quantity_per_order" required placeholder="e.g., 2.4">
+                </div>
 
-        <label>Average Quantity per Order</label>
-        <input type="number" step="any" name="avg_quantity_per_order" required>
+                <div class="field">
+                    <label for="unit_price_std">Unit Price Std</label>
+                    <input id="unit_price_std" type="number" step="any" name="unit_price_std" required placeholder="e.g., 3.5">
+                </div>
 
-        <label>Unit Price Std</label>
-        <input type="number" step="any" name="unit_price_std" required>
+                <div class="field">
+                    <label for="customer_age_days">Customer Age (days)</label>
+                    <input id="customer_age_days" type="number" step="1" name="customer_age_days" required placeholder="e.g., 400">
+                </div>
 
-        <label>Customer Age (days)</label>
-        <input type="number" step="1" name="customer_age_days" required>
+                <div class="field">
+                    <label for="days_since_last_purchase">Days Since Last Purchase</label>
+                    <input id="days_since_last_purchase" type="number" step="1" name="days_since_last_purchase" required placeholder="e.g., 30">
+                </div>
 
-        <label>Days Since Last Purchase</label>
-        <input type="number" step="1" name="days_since_last_purchase" required>
+                <div class="field">
+                    <label for="average_days_between_purchase">Average Days Between Purchase</label>
+                    <input id="average_days_between_purchase" type="number" step="any" name="average_days_between_purchase" required placeholder="e.g., 45.5">
+                </div>
 
-        <label>Average Days Between Purchase</label>
-        <input type="number" step="any" name="average_days_between_purchase" required>
+                <div class="field">
+                    <label for="is_onetime_buyer">Is One-Time Buyer</label>
+                    <select id="is_onetime_buyer" name="is_onetime_buyer" required>
+                        <option value="0">No (0)</option>
+                        <option value="1">Yes (1)</option>
+                    </select>
+                </div>
 
-        <label>Is One-Time Buyer (0 or 1)</label>
-        <input type="number" min="0" max="1" name="is_onetime_buyer" required>
+                <div class="full">
+                    <p class="note">Tip: Provide realistic feature values for better predictions. This prediction approximates expected spending in the next 90 days (not lifetime value).</p>
+                </div>
+            </div>
 
-        <button type="submit">Predict CLV</button>
-    </form>
+            <div class="actions">
+                <button type="submit">Predict 90-day Spending</button>
+            </div>
+        </form>
 
-    {% if prediction %}
-    <div class="result">
-        <strong>Predicted CLV:</strong> {{ prediction }}
+        {% if prediction %}
+        <div class="result" role="status" aria-live="polite">
+            Predicted spending in next 90 days: <span style="margin-left:8px;">{{ prediction }}</span>
+        </div>
+        {% endif %}
     </div>
-    {% endif %}
 </div>
-
 </body>
 </html>

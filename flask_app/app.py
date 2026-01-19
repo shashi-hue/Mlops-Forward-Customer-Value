@@ -69,7 +69,7 @@ REQUIRED_FEATURES = [
 def home():
     REQUEST_COUNT.labels(method="GET", endpoint="/").inc()
     start_time = time.time()
-    response = render_template("index.html", result=None)
+    response = render_template("index.html", Prediction=None)
     REQUEST_LATENCY.labels(endpoint="/").observe(time.time() - start_time)
     return response
 
