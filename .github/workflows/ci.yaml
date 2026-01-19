@@ -68,7 +68,7 @@ jobs:
 
       - name: Tag Docker image
         run: |
-            docker tag ${{ secrets.ECR_REPOSITORY }}:latest \
+            docker tag ${{ secrets.ECR_REPOSITORY }}:${IMAGE_TAG} \
             ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:${IMAGE_TAG}
 
     
