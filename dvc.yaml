@@ -17,7 +17,7 @@ stages:
   feature_engineering:
     cmd: python src/features/feature_engineering.py
     deps:
-    - data/raw
+    - data/interim
     - src/features/feature_engineering.py
     params:
     - feature_engineering.test_size
