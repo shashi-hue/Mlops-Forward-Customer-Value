@@ -1,6 +1,12 @@
 name: CI-Pipeline
 
-on: push
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - "**/*.ipynb"
+      - ".gitattributes"
+      - "README.md"
 
 jobs:
   project_testing:
